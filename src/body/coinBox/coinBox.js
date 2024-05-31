@@ -1,13 +1,6 @@
 import React, { useState } from 'react';
-import { copyImage, twitterImage, telegramImage, websiteImage, pumpFunImage } from './links';
+import { copyImage, twitterImage, telegramImage, websiteImage } from './links';
 import './coinBox.css';
-
-const convertIpfsUrl = (url) => {
-    if (url.startsWith('https://gateway.pinata.cloud/ipfs/')) {
-        return url.replace('https://gateway.pinata.cloud/ipfs/', 'https://cloudflare-ipfs.com/ipfs/');
-    }
-    return url;
-}
 
 function formatNumber(num) {
     if (num === null || num === undefined || isNaN(num)) {
@@ -40,14 +33,31 @@ function CoinBox({ coin }) {
     const formattedLiquidity = formatNumber(coin.totalLiquidity);
 
     const handleCopy = () => {
-        navigator.clipboard.writeText(coin.poolAddress).then(() => {
-            setIsCopied(true);
-            setTimeout(() => {
-                setIsCopied(false);
-            }, 150);
-        }).catch(err => {
-            console.error('Could not copy text: ', err);
-        });
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(coin.poolAddress).then(() => {
+                setIsCopied(true);
+                setTimeout(() => {
+                    setIsCopied(false);
+                }, 1500);
+            }).catch(err => {
+                console.error('Could not copy text: ', err);
+            });
+        } else {
+            const textarea = document.createElement('textarea');
+            textarea.value = coin.poolAddress;
+            document.body.appendChild(textarea);
+            textarea.select();
+            try {
+                document.execCommand('copy');
+                setIsCopied(true);
+                setTimeout(() => {
+                    setIsCopied(false);
+                }, 1500);
+            } catch (err) {
+                console.error('Could not copy text: ', err);
+            }
+            document.body.removeChild(textarea);
+        }
     };
 
     const handleButtonClick = (url) => {
@@ -81,7 +91,7 @@ function CoinBox({ coin }) {
 
     return (
         <div className='coinBox'>
-            <img className='coinImg' src={convertIpfsUrl(coin.img_url)} alt={coin.tokenName} />
+            <img className='coinImg' src={coin.img_url} alt={coin.tokenName} />
             <div className='coinDetails'>
                 <div className='coinNameContainer'>
                     <span className='coinNameLabel'>Name:</span>

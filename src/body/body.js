@@ -13,7 +13,7 @@ function Body() {
             localStorage.clear();
             console.log('Local storage cleared');
         };
-
+ 
         const updateCoins = async () => {
             console.log('Updating coins...');
             try {
