@@ -101,7 +101,7 @@ function Body() {
         <div className='body-container'>
             <div className='upcoming-container'>
                 <div className='title'>
-                    <h2>Upcoming Images</h2>
+                    <h2>Enhanced Token Info Update</h2>
                 </div>
                 <div className='upcoming-body'>
                     {publishedRows.map((row, rowIndex) => (

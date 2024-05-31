@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { copyImage, twitterImage, telegramImage, websiteImage } from './links';
+import { copyImage, twitterImage, telegramImage, websiteImage, pumpFunImage } from './links';
 import './coinBox.css';
 
 function formatNumber(num) {
@@ -97,6 +97,9 @@ function CoinBox({ coin }) {
     return (
         <div className='coinBox'>
             <img className='coinImg' src={imgSrc} alt={coin.tokenName} />
+            {coin.pumpfun && (
+                <img className='pumpFunImg' src={pumpFunImage} alt='Pump Fun' />
+            )}
             <div className='coinDetails'>
                 <div className='coinNameContainer'>
                     <span className='coinNameLabel'>Name:</span>

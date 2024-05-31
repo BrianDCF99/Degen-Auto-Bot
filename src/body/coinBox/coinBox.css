@@ -13,6 +13,7 @@
     border-width: 0.5px;
     overflow: hidden; /* Ensure child elements respect the rounded corners */
     margin-bottom: 10px; /* Reduce space between rows */
+    position: relative; /* Make the coinBox the containing block for absolutely positioned elements */
 }
 
 .coinImg {
@@ -22,6 +23,15 @@
     margin-bottom: 1vh;
     margin-right: 2vh; /* Add margin to the right of the image for a gap */
     border-radius: 10px; /* Add rounded corners to the image */
+}
+
+.pumpFunImg {
+    position: absolute;
+    top: 5%;
+    right: 2%;
+    width: 10%; /* Adjust size as needed */
+    height: 21%; /* Adjust size as needed */
+    border-radius: 50%; /* Make it circular */
 }
 
 .coinDetails {
@@ -58,6 +68,15 @@
     max-width: 70%; /* Cap the width of the Name attribute */
     overflow-x: auto; /* Allow horizontal scrolling */
     white-space: nowrap; /* Prevent text from wrapping */
+
+    /* Hide scrollbar for Webkit browsers (Chrome, Safari) */
+    &::-webkit-scrollbar {
+        display: none;
+    }
+
+    /* Hide scrollbar for other browsers */
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
 }
 
 .buttonContainer {
