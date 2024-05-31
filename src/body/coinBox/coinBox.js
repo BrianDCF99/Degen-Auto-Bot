@@ -32,6 +32,11 @@ function CoinBox({ coin }) {
     const formattedMarketCap = formatNumber(coin.marketCap);
     const formattedLiquidity = formatNumber(coin.totalLiquidity);
 
+    // Handle pinata.cloud links
+    const imgSrc = coin.img_url.includes('pinata.cloud')
+        ? coin.img_url.replace('gateway.pinata.cloud', 'cloudflare-ipfs.com')
+        : coin.img_url;
+
     const handleCopy = () => {
         if (navigator.clipboard && navigator.clipboard.writeText) {
             navigator.clipboard.writeText(coin.poolAddress).then(() => {
@@ -91,7 +96,7 @@ function CoinBox({ coin }) {
 
     return (
         <div className='coinBox'>
-            <img className='coinImg' src={coin.img_url} alt={coin.tokenName} />
+            <img className='coinImg' src={imgSrc} alt={coin.tokenName} />
             <div className='coinDetails'>
                 <div className='coinNameContainer'>
                     <span className='coinNameLabel'>Name:</span>
