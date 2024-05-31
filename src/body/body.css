@@ -1,0 +1,60 @@
+.body-container {
+    padding: 40px 10px 10px 40px;
+    height: 90vh; /* Cap the height to 86% of the viewport height */
+    background-color: black;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow-y: auto;
+    width: calc(100% - 80px); /* General container width adjustment */
+}
+
+.title {
+    text-align: left;
+    margin-bottom: 10px;
+}
+
+.upcoming-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 93vw; /* Make the container take the full width of .body-container */
+    margin-bottom: 20px; /* Add some space between sections */
+    margin-left: -45px;
+}
+
+.upcoming-body {
+    margin-top: -2vh;
+    display: flex;
+    overflow-x: auto;
+    height: 22vh; /* Adjust this value based on the height of your coin boxes */
+    width: 100%;
+}
+
+.upcoming-row {
+    display: flex;
+    flex-direction: row;
+}
+
+.body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow-y: auto;
+    width: 100%; /* Ensure the same width as the container */
+    height: 47vh; /* Adjust this value based on the height of your coin boxes */
+}
+
+.row {
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    width: 100%;
+    gap: 10px;
+}
+
+.title{
+    color: white;
+    font-size: 2.5vh;
+    margin-bottom: 10px;
+}

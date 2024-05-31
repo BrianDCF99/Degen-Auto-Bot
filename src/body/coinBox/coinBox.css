@@ -1,0 +1,91 @@
+.coinBox {
+    background-color: #010b18;
+    width: 23vw; /* Adjust width to show 4 per row */
+    height: 10vw;
+    padding: 1vh;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: row; /* Display items horizontally */
+    align-items: center; /* Align items vertically in the center */
+    border-radius: 20px; /* Add rounded corners to the box */
+    border-style: solid;
+    border-color: white;
+    border-width: 0.5px;
+    overflow: hidden; /* Ensure child elements respect the rounded corners */
+    margin-bottom: 10px; /* Reduce space between rows */
+}
+
+.coinImg {
+    width: 18vh;
+    height: 18vh;
+    margin-top: 1vh;
+    margin-bottom: 1vh;
+    margin-right: 2vh; /* Add margin to the right of the image for a gap */
+    border-radius: 10px; /* Add rounded corners to the image */
+}
+
+.coinDetails {
+    display: flex;
+    flex-direction: column; /* Display items vertically */
+    justify-content: space-between; /* Align items with space between them */
+    height: 90%; /* Take full height of the container */
+    flex-grow: 1; /* Allow the details to take up remaining space */
+    align-items: flex-start; /* Align items to the start */
+    padding-left: 10px; /* Add padding to the left side */
+    padding-right: 20px; /* Ensure consistent spacing on the right side */
+}
+
+.coinDetails p {
+    margin: 5px 0; /* Add margin to separate the items */
+    color: #FFFFFF; /* Set text color to white */
+    font-size: 2vh; /* Set font size */
+}
+
+.coinDetails .coinNameContainer {
+    display: flex;
+    align-items: center; /* Align items vertically in the center */
+    color: #FFFFFF; /* Set text color to white */
+    width: 160px; /* Set width to 80% of the container */
+    font-size: 2vh; /* Set font size */
+}
+
+.coinDetails .coinNameLabel {
+    margin-right: 5px; /* Space between "Name:" label and actual name */
+    color: #FFFFFF; /* Set text color to white */
+}
+
+.coinDetails .coinName {
+    max-width: 70%; /* Cap the width of the Name attribute */
+    overflow-x: auto; /* Allow horizontal scrolling */
+    white-space: nowrap; /* Prevent text from wrapping */
+}
+
+.buttonContainer {
+    display: flex;
+    justify-content: center; /* Center the buttons */
+    align-items: center; /* Center the buttons vertically */
+    margin-top: 10px; /* Add margin to separate from the details */
+    flex-wrap: wrap; /* Allow buttons to wrap if necessary */
+    gap: 10px; /* Set gap between buttons */
+}
+
+.clipboardButton,
+.socialButton {
+    width: 45px;
+    height: 35px;
+    border-radius: 50%;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+.clipboardButton.copied {
+    background-color: green; /* Add green background when copied */
+}
+
+.clipboardIcon,
+.buttonIcon {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+}
