@@ -17,10 +17,10 @@
 }
 
 .coinImg {
-    width: 18vh;
-    height: 18vh;
-    margin-top: 1vh;
-    margin-bottom: 1vh;
+    width: 45%;
+    height: 101%;
+    margin-top: 1%;
+    margin-bottom: 1%;
     margin-right: 2vh; /* Add margin to the right of the image for a gap */
     border-radius: 10px; /* Add rounded corners to the image */
 }
@@ -48,7 +48,7 @@
 .coinDetails p {
     margin: 5px 0; /* Add margin to separate the items */
     color: #FFFFFF; /* Set text color to white */
-    font-size: 2vh; /* Set font size */
+    font-size: 100%; /* Set font size */
 }
 
 .coinDetails .coinNameContainer {
@@ -56,7 +56,7 @@
     align-items: center; /* Align items vertically in the center */
     color: #FFFFFF; /* Set text color to white */
     width: 160px; /* Set width to 80% of the container */
-    font-size: 2vh; /* Set font size */
+    font-size: 100%; /* Set font size */
 }
 
 .coinDetails .coinNameLabel {
@@ -83,7 +83,7 @@
     display: flex;
     justify-content: center; /* Center the buttons */
     align-items: center; /* Center the buttons vertically */
-    margin-top: 10px; /* Add margin to separate from the details */
+    margin-top: 3%; /* Add margin to separate from the details */
     flex-wrap: wrap; /* Allow buttons to wrap if necessary */
     gap: 10px; /* Set gap between buttons */
 }
@@ -107,4 +107,22 @@
     width: 100%;
     height: 100%;
     border-radius: 50%;
+}
+
+@keyframes flashBlue {
+    0%, 100% { background-color: #010b18; }
+    25%, 75% { background-color: blue; }
+}
+
+.flashBlue {
+    animation: flashBlue 1s ease-in-out 3;
+}
+
+@keyframes flashGreen {
+    0%, 100% { background-color: #010b18; }
+    25%, 75% { background-color: green; }
+}
+
+.flashGreen {
+    animation: flashGreen 1s ease-in-out 3;
 }

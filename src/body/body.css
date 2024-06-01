@@ -21,6 +21,15 @@
     width: 93vw; /* Make the container take the full width of .body-container */
     margin-bottom: 20px; /* Add some space between sections */
     margin-left: -45px;
+
+    /* Hide scrollbar for Webkit browsers (Chrome, Safari) */
+    &::-webkit-scrollbar {
+        display: none;
+    }
+
+    /* Hide scrollbar for other browsers */
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
 }
 
 .upcoming-body {

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { copyImage, twitterImage, telegramImage, websiteImage, pumpFunImage } from './links';
 import './coinBox.css';
 
@@ -22,8 +22,24 @@ function formatNumber(num) {
     return '$' + num.toFixed(2);
 }
 
-function CoinBox({ coin }) {
+function CoinBox({ coin, flash, flashGreen }) {
     const [isCopied, setIsCopied] = useState(false);
+    const [isNew, setIsNew] = useState(flash);
+    const [isNewGreen, setIsNewGreen] = useState(flashGreen);
+
+    useEffect(() => {
+        if (isNew) {
+            const timer = setTimeout(() => setIsNew(false), 1000); // Remove the new state after 1 second
+            return () => clearTimeout(timer);
+        }
+    }, [isNew]);
+
+    useEffect(() => {
+        if (isNewGreen) {
+            const timer = setTimeout(() => setIsNewGreen(false), 1000); // Remove the new state after 1 second
+            return () => clearTimeout(timer);
+        }
+    }, [isNewGreen]);
 
     if (!coin) {
         return <p>Loading...</p>;
@@ -39,7 +55,7 @@ function CoinBox({ coin }) {
 
     const handleCopy = () => {
         if (navigator.clipboard && navigator.clipboard.writeText) {
-            navigator.clipboard.writeText(coin.poolAddress).then(() => {
+            navigator.clipboard.writeText(coin.tokenAddress).then(() => {
                 setIsCopied(true);
                 setTimeout(() => {
                     setIsCopied(false);
@@ -57,7 +73,7 @@ function CoinBox({ coin }) {
                 setIsCopied(true);
                 setTimeout(() => {
                     setIsCopied(false);
-                }, 1500);
+                }, 200);
             } catch (err) {
                 console.error('Could not copy text: ', err);
             }
@@ -94,8 +110,17 @@ function CoinBox({ coin }) {
         }
     }
 
+    // Methods to trigger animations
+    coin.flashYellow = () => {
+        setIsNewGreen(true);
+    };
+
+    coin.flashBlue = () => {
+        setIsNew(true);
+    };
+
     return (
-        <div className='coinBox'>
+        <div className={`coinBox ${isNew ? 'flashBlue' : ''} ${isNewGreen ? 'flashGreen' : ''}`}>
             <img className='coinImg' src={imgSrc} alt={coin.tokenName} />
             {coin.pumpfun && (
                 <img className='pumpFunImg' src={pumpFunImage} alt='Pump Fun' />
