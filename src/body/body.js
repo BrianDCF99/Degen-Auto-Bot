@@ -87,7 +87,7 @@ function Body() {
                 // Add coins to dpPublished that are in bufferArray but not in dpPublished
                 bufferArray.forEach(bufferCoin => {
                     if (!updatedDpPublished.some(dpCoin => dpCoin.tokenAddress === bufferCoin.tokenAddress)) {
-                        updatedDpPublished.push(bufferCoin);
+                        updatedDpPublished.unshift(bufferCoin); // Use unshift to maintain LIFO order
                         flashBlue(bufferCoin.tokenAddress); // Flash blue when a new coin is added
                     }
                 });
