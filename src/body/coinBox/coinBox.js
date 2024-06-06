@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { copyImage, twitterImage, telegramImage, websiteImage, pumpFunImage } from './links';
+import { copyImage, twitterImage, telegramImage, websiteImage, pumpFunImage, imgNotFound } from './links';
 import './coinBox.css';
 
 function formatNumber(num) {
@@ -22,21 +22,17 @@ function formatNumber(num) {
     return '$' + num.toFixed(2);
 }
 
-function CoinBox({ coin, id }) {
+function CoinBox({ coin, id, isNewBlue, isNewGreen }) {
     const [isCopied, setIsCopied] = useState(false);
-    const [isFlashed, setIsFlashed] = useState(false); // Boolean flag for flashing
 
     useEffect(() => {
-        // Flash blue or green based on the prop and reset the flag
-        if (!isFlashed) {
-            if (coin.isNewBlue) {
-                flashBlue(coin.tokenAddress);
-            } else if (coin.isNewGreen) {
-                flashGreen(coin.tokenAddress);
-            }
-            setIsFlashed(true); // Set the flag to true to prevent future flashing
+        // Flash blue or green based on the prop
+        if (isNewBlue) {
+            flashBlue(coin.tokenAddress);
+        } else if (isNewGreen) {
+            flashGreen(coin.tokenAddress);
         }
-    }, [coin, isFlashed]);
+    }, [isNewBlue, isNewGreen, coin.tokenAddress]);
 
     const flashBlue = (coinAddress) => {
         const element = document.getElementById(`coinBox-${coinAddress}`);
@@ -66,9 +62,15 @@ function CoinBox({ coin, id }) {
     const formattedLiquidity = formatNumber(coin.totalLiquidity);
 
     // Handle pinata.cloud links
-    const imgSrc = coin.img_url.includes('pinata.cloud')
-        ? coin.img_url.replace('gateway.pinata.cloud', 'cloudflare-ipfs.com')
-        : coin.img_url;
+    const imgSrc = (imgUrl) => {
+        if (!imgUrl){
+            return imgNotFound;
+        }
+        if (imgUrl.includes('pinata.cloud')) {
+            return imgUrl.replace('gateway.pinata.cloud', 'cloudflare-ipfs.com');
+        }
+        return imgUrl;
+    };
 
     const handleCopy = () => {
         if (navigator.clipboard && navigator.clipboard.writeText) {
@@ -129,7 +131,7 @@ function CoinBox({ coin, id }) {
 
     return (
         <div className={`coinBox`} id={id}>
-            <img className='coinImg' src={imgSrc} alt={coin.tokenName} />
+            <img className='coinImg' src={imgSrc(coin.img_url)} alt={coin.tokenName} />
             {coin.pumpfun && (
                 <img className='pumpFunImg' src={pumpFunImage} alt='Pump Fun' />
             )}

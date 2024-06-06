@@ -14,12 +14,14 @@
     border-color: white;
     border-width: 0.5px;
     overflow: hidden; /* Ensure child elements respect the rounded corners */
-    margin-bottom: 10px; /* Reduce space between rows */
+    margin-bottom: 1vh;
     position: relative; /* Make the coinBox the containing block for absolutely positioned elements */
 }
 .coinImg {
-    width: 45%;
-    height: 101%;
+    min-width: 45%;
+    max-width: 45%;
+    min-height: 98%;
+    max-height: 98%;
     margin-top: 1%;
     margin-bottom: 1%;
     margin-right: 2vh; /* Add margin to the right of the image for a gap */
@@ -39,24 +41,27 @@
     display: flex;
     flex-direction: column; /* Display items vertically */
     justify-content: space-between; /* Align items with space between them */
-    height: 90%; /* Take full height of the container */
+    min-height: 90%; /* Take full height of the container */
+    min-width: 50%; /* Take 50% of the container width */
     flex-grow: 1; /* Allow the details to take up remaining space */
     align-items: flex-start; /* Align items to the start */
-    padding-left: 10px; /* Add padding to the left side */
-    padding-right: 20px; /* Ensure consistent spacing on the right side */
+    padding-left: 1%; /* Add padding to the left side */
+    padding-right: 1%; /* Ensure consistent spacing on the right side */
 }
 
 .coinDetails p {
-    margin: 5px 0; /* Add margin to separate the items */
+    margin: 3% 0; /* Add margin to separate the items */
     color: #FFFFFF; /* Set text color to white */
     font-size: 100%; /* Set font size */
+    
 }
 
 .coinDetails .coinNameContainer {
+    margin: 3% 0; /* Add margin to separate the items */
     display: flex;
     align-items: center; /* Align items vertically in the center */
     color: #FFFFFF; /* Set text color to white */
-    width: 160px; /* Set width to 80% of the container */
+    width: 80%; /* Set width to 80% of the container */
     font-size: 100%; /* Set font size */
 }
 
@@ -71,16 +76,13 @@
     white-space: nowrap; /* Prevent text from wrapping */
 
     /* Hide scrollbar for Webkit browsers (Chrome, Safari) */
-    &::-webkit-scrollbar {
-        display: none;
-    }
-
-    /* Hide scrollbar for other browsers */
-    -ms-overflow-style: none; /* IE and Edge */
+    -webkit-overflow-scrolling: touch; /* Ensure smooth scrolling on mobile */
     scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE and Edge */
 }
 
 .buttonContainer {
+    min-width: 100%; /* Take full width of the container */
     display: flex;
     justify-content: center; /* Center the buttons */
     align-items: center; /* Center the buttons vertically */
@@ -91,12 +93,15 @@
 
 .clipboardButton,
 .socialButton {
-    width: 45px;
-    height: 35px;
+    min-width: 15%; /* Set width of the buttons */
+    max-width: 15%; /* Set width of the buttons */
+    min-height: 13%;
+    max-height: 13%;
     border-radius: 50%;
     background-color: transparent;
     border: none;
     cursor: pointer;
+    padding-left: -2%;
 }
 
 .clipboardButton.copied {

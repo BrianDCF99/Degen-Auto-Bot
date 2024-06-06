@@ -8,17 +8,7 @@ function Body() {
     const [dpPublished, setDpPublished] = useState([]);
     const [newImageDisplayed, setNewImageDisplayed] = useState([]); // Track displayed coins
 
-    // Flashing methods
-    const flashBlue = (coinAddress) => {
-        const element = document.getElementById(`coinBox-${coinAddress}`);
-        if (element) {
-            element.classList.add('flashBlue');
-            setTimeout(() => {
-                element.classList.remove('flashBlue');
-            }, 1000); // Duration of the animation
-        }
-    };
-
+    // Flashing method for green
     const flashGreen = (coinAddress) => {
         const element = document.getElementById(`coinBox-${coinAddress}`);
         if (element) {
@@ -62,13 +52,16 @@ function Body() {
                 }
                 console.log('DEX PAID DONE ------');
 
-                // Filter out coins that have already been added to Image Added
-                let bufferArray = [];
-                for (const coin of upcomingCoinsArray) {
-                    if (!addedCoinsArray.some(addedCoin => addedCoin.tokenAddress === coin.tokenAddress)) {
-                        bufferArray.push(coin);
-                    }
-                }
+                // Step 1: Filter out coins from upcomingCoinsArray that are present in addedCoinsArray
+                let bufferArray = upcomingCoinsArray.filter(coin => 
+                    !addedCoinsArray.some(addedCoin => addedCoin.tokenAddress === coin.tokenAddress)
+                );
+
+                // Step 2: Ensure bufferArray only contains coins that are still present in upcomingCoinsArray
+                bufferArray = bufferArray.filter(coin => 
+                    upcomingCoinsArray.some(upcomingCoin => upcomingCoin.tokenAddress === coin.tokenAddress)
+                );
+
                 console.log('Buffer Array:', bufferArray);
 
                 // Initialize dpPublished in local storage if it doesn't exist
@@ -87,8 +80,7 @@ function Body() {
                 // Add coins to dpPublished that are in bufferArray but not in dpPublished
                 bufferArray.forEach(bufferCoin => {
                     if (!updatedDpPublished.some(dpCoin => dpCoin.tokenAddress === bufferCoin.tokenAddress)) {
-                        updatedDpPublished.unshift(bufferCoin); // Use unshift to maintain LIFO order
-                        flashBlue(bufferCoin.tokenAddress); // Flash blue when a new coin is added
+                        updatedDpPublished.unshift({ ...bufferCoin, isNew: true }); // Use unshift to maintain LIFO order and add isNew flag
                     }
                 });
 
@@ -143,6 +135,7 @@ function Body() {
                             key={index}
                             coin={coin}
                             id={`coinBox-${coin.tokenAddress}`}
+                            isNewBlue={coin.isNew} // Pass the isNew flag to CoinBox
                         />
                     ))}
                 </div>
@@ -158,6 +151,7 @@ function Body() {
                                 key={index}
                                 coin={coin}
                                 id={`coinBox-${coin.tokenAddress}`}
+                                isNewGreen={true} // Ensure it gets the prop
                             />
                         ))}
                     </div>
