@@ -9,18 +9,14 @@
     width: calc(100% - 80px); /* General container width adjustment */
 }
 
-.title {
-    text-align: left;
-    margin-bottom: 10px;
-}
-
 .upcoming-container {
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 93vw; /* Make the container take the full width of .body-container */
-    margin-bottom: 20px; /* Add some space between sections */
-    margin-left: -45px;
+    width: 94vw; /* Make the container take the full width of .body-container */
+    overflow-x: auto;
+    margin-left: -6vh;
+   
 
     /* Hide scrollbar for Webkit browsers (Chrome, Safari) */
     &::-webkit-scrollbar {
@@ -38,6 +34,7 @@
     overflow-x: auto;
     height: 22vh; /* Adjust this value based on the height of your coin boxes */
     width: 100%;
+    gap: 0.5vw;
 }
 
 .upcoming-row {
@@ -62,8 +59,12 @@
     gap: 10px;
 }
 
-.title{
+.title, .Dtitle {
     color: white;
     font-size: 2.5vh;
     margin-bottom: 10px;
+}
+
+.Dtitle{
+    margin-left: 3vw;
 }

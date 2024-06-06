@@ -22,24 +22,41 @@ function formatNumber(num) {
     return '$' + num.toFixed(2);
 }
 
-function CoinBox({ coin, flash, flashGreen }) {
+function CoinBox({ coin, id }) {
     const [isCopied, setIsCopied] = useState(false);
-    const [isNew, setIsNew] = useState(flash);
-    const [isNewGreen, setIsNewGreen] = useState(flashGreen);
+    const [isFlashed, setIsFlashed] = useState(false); // Boolean flag for flashing
 
     useEffect(() => {
-        if (isNew) {
-            const timer = setTimeout(() => setIsNew(false), 1000); // Remove the new state after 1 second
-            return () => clearTimeout(timer);
+        // Flash blue or green based on the prop and reset the flag
+        if (!isFlashed) {
+            if (coin.isNewBlue) {
+                flashBlue(coin.tokenAddress);
+            } else if (coin.isNewGreen) {
+                flashGreen(coin.tokenAddress);
+            }
+            setIsFlashed(true); // Set the flag to true to prevent future flashing
         }
-    }, [isNew]);
+    }, [coin, isFlashed]);
 
-    useEffect(() => {
-        if (isNewGreen) {
-            const timer = setTimeout(() => setIsNewGreen(false), 1000); // Remove the new state after 1 second
-            return () => clearTimeout(timer);
+    const flashBlue = (coinAddress) => {
+        const element = document.getElementById(`coinBox-${coinAddress}`);
+        if (element) {
+            element.classList.add('flashBlue');
+            setTimeout(() => {
+                element.classList.remove('flashBlue');
+            }, 1000); // Duration of the animation
         }
-    }, [isNewGreen]);
+    };
+
+    const flashGreen = (coinAddress) => {
+        const element = document.getElementById(`coinBox-${coinAddress}`);
+        if (element) {
+            element.classList.add('flashGreen');
+            setTimeout(() => {
+                element.classList.remove('flashGreen');
+            }, 1000); // Duration of the animation
+        }
+    };
 
     if (!coin) {
         return <p>Loading...</p>;
@@ -110,17 +127,8 @@ function CoinBox({ coin, flash, flashGreen }) {
         }
     }
 
-    // Methods to trigger animations
-    coin.flashYellow = () => {
-        setIsNewGreen(true);
-    };
-
-    coin.flashBlue = () => {
-        setIsNew(true);
-    };
-
     return (
-        <div className={`coinBox ${isNew ? 'flashBlue' : ''} ${isNewGreen ? 'flashGreen' : ''}`}>
+        <div className={`coinBox`} id={id}>
             <img className='coinImg' src={imgSrc} alt={coin.tokenName} />
             {coin.pumpfun && (
                 <img className='pumpFunImg' src={pumpFunImage} alt='Pump Fun' />

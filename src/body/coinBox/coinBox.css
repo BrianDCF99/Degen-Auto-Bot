@@ -1,7 +1,9 @@
 .coinBox {
     background-color: #010b18;
-    width: 23vw; /* Adjust width to show 4 per row */
-    height: 10vw;
+    min-width: 23vw; /* Adjust width to show 4 per row */
+    max-width: 23vw;
+    min-height: 10vw;
+    max-height: 10vw;
     padding: 1vh;
     box-sizing: border-box;
     display: flex;
