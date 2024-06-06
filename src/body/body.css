@@ -6,7 +6,7 @@
     flex-direction: column;
     align-items: center;
     overflow-y: auto;
-    width: calc(100% - 80px); /* General container width adjustment */
+    width: 97vw; /* General container width adjustment */
 }
 
 .upcoming-container {
@@ -56,15 +56,20 @@
     justify-content: flex-start;
     align-items: flex-start;
     width: 100%;
-    gap: 10px;
+    gap: 1vh;
 }
 
-.title, .Dtitle {
+.Dtitle {
     color: white;
     font-size: 2.5vh;
-    margin-bottom: 10px;
+    margin-bottom: 1vh;
+    margin-left: -2vw; /* Add this line to shift the title 2vw to the left */
 }
 
-.Dtitle{
-    margin-left: 3vw;
+.body-container .title {
+    color: white;
+    font-size: 2.5vh;
+    margin-bottom: 1vh;
+    margin-right: 3.7vw; /* Adding padding-left instead */
 }
+
