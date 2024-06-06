@@ -24,15 +24,20 @@ function formatNumber(num) {
 
 function CoinBox({ coin, id, isNewBlue, isNewGreen }) {
     const [isCopied, setIsCopied] = useState(false);
+    const [hasFlashed, setHasFlashed] = useState(false);
 
     useEffect(() => {
         // Flash blue or green based on the prop
-        if (isNewBlue) {
-            flashBlue(coin.tokenAddress);
-        } else if (isNewGreen) {
-            flashGreen(coin.tokenAddress);
+        if (!hasFlashed) {
+            if (isNewBlue) {
+                flashBlue(coin.tokenAddress);
+                setHasFlashed(true);
+            } else if (isNewGreen) {
+                flashGreen(coin.tokenAddress);
+                setHasFlashed(true);
+            }
         }
-    }, [isNewBlue, isNewGreen, coin.tokenAddress]);
+    }, [isNewBlue, isNewGreen, coin.tokenAddress, hasFlashed]);
 
     const flashBlue = (coinAddress) => {
         const element = document.getElementById(`coinBox-${coinAddress}`);

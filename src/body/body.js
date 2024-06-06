@@ -8,7 +8,6 @@ function Body() {
     const [dpPublished, setDpPublished] = useState([]);
     const [newImageDisplayed, setNewImageDisplayed] = useState([]); // Track displayed coins
 
-    // Flashing method for green
     const flashGreen = (coinAddress) => {
         const element = document.getElementById(`coinBox-${coinAddress}`);
         if (element) {
@@ -76,6 +75,9 @@ function Body() {
                 const updatedDpPublished = dpPublishedArray.filter(coin =>
                     bufferArray.some(bufferCoin => bufferCoin.tokenAddress === coin.tokenAddress)
                 );
+
+                // Reset isNew flag for existing coins
+                updatedDpPublished.forEach(coin => coin.isNew = false);
 
                 // Add coins to dpPublished that are in bufferArray but not in dpPublished
                 bufferArray.forEach(bufferCoin => {
