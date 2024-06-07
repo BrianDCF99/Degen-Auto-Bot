@@ -27,6 +27,11 @@ function CoinBox({ coin, id, isNewBlue, isNewGreen }) {
     const [hasFlashed, setHasFlashed] = useState(false);
 
     useEffect(() => {
+        // Reset hasFlashed state when isNewBlue or isNewGreen changes
+        setHasFlashed(false);
+    }, [isNewBlue, isNewGreen]);
+
+    useEffect(() => {
         // Flash blue or green based on the prop
         if (!hasFlashed) {
             if (isNewBlue) {
@@ -45,7 +50,7 @@ function CoinBox({ coin, id, isNewBlue, isNewGreen }) {
             element.classList.add('flashBlue');
             setTimeout(() => {
                 element.classList.remove('flashBlue');
-            }, 1000); // Duration of the animation
+            }, 5000); // Duration of the animation
         }
     };
 

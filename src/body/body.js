@@ -6,17 +6,10 @@ import './body.css';
 function Body() {
     const [addedCoins, setAddedCoins] = useState([]);
     const [dpPublished, setDpPublished] = useState([]);
-    const [newImageDisplayed, setNewImageDisplayed] = useState([]); // Track displayed coins
-
-    const flashGreen = (coinAddress) => {
-        const element = document.getElementById(`coinBox-${coinAddress}`);
-        if (element) {
-            element.classList.add('flashGreen');
-            setTimeout(() => {
-                element.classList.remove('flashGreen');
-            }, 1000); // Duration of the animation
-        }
-    };
+    const [previousAddedCoins, setPreviousAddedCoins] = useState([]); // Track previous added coins
+    const [previousDpPublished, setPreviousDpPublished] = useState([]); // Track previous published coins
+    const [newlyAddedGreenCoins, setNewlyAddedGreenCoins] = useState([]); // Track newly added coins for green flashing
+    const [newlyAddedBlueCoins, setNewlyAddedBlueCoins] = useState([]); // Track newly added coins for blue flashing
 
     useEffect(() => {
         const clearLocalStorageOnce = () => {
@@ -30,18 +23,23 @@ function Body() {
         const updateCoins = async () => {
             console.log('Updating coins...');
             try {
-                console.log('NEW IMAGES');
+                // Clear local storage keys for newImages and dexPaid
+                localStorage.removeItem('newImages');
+                localStorage.removeItem('dexPaid');
+
+                // Fetch new images
+                console.log('Fetching new images...');
                 await addedFetcher.updateCoins('https://degenautobot.xyz');
                 const addedCoinsData = localStorage.getItem('newImages');
                 let addedCoinsArray = [];
                 if (addedCoinsData) {
                     addedCoinsArray = JSON.parse(addedCoinsData).reverse();
-                    setAddedCoins(addedCoinsArray);
                     console.log('Added Coins:', addedCoinsArray);
                 }
-                console.log('NEW IMAGES DONE ------');
+                console.log('Fetching new images done.');
 
-                console.log('DEX PAID');
+                // Fetch enhanced token info
+                console.log('Fetching enhanced token info...');
                 await upcomingFetcher.updateCoins('https://degenautobot.xyz/dex');
                 const upcomingCoinsData = localStorage.getItem('dexPaid');
                 let upcomingCoinsArray = [];
@@ -49,19 +47,13 @@ function Body() {
                     upcomingCoinsArray = JSON.parse(upcomingCoinsData).reverse();
                     console.log('Upcoming Coins:', upcomingCoinsArray);
                 }
-                console.log('DEX PAID DONE ------');
+                console.log('Fetching enhanced token info done.');
 
                 // Step 1: Filter out coins from upcomingCoinsArray that are present in addedCoinsArray
                 let bufferArray = upcomingCoinsArray.filter(coin => 
                     !addedCoinsArray.some(addedCoin => addedCoin.tokenAddress === coin.tokenAddress)
                 );
-
-                // Step 2: Ensure bufferArray only contains coins that are still present in upcomingCoinsArray
-                bufferArray = bufferArray.filter(coin => 
-                    upcomingCoinsArray.some(upcomingCoin => upcomingCoin.tokenAddress === coin.tokenAddress)
-                );
-
-                console.log('Buffer Array:', bufferArray);
+                console.log('Buffer Array after filtering:', bufferArray);
 
                 // Initialize dpPublished in local storage if it doesn't exist
                 let dpPublishedArray = [];
@@ -86,21 +78,30 @@ function Body() {
                     }
                 });
 
+                // Track newly added blue coins
+                const newlyAddedBlue = updatedDpPublished.filter(coin =>
+                    !previousDpPublished.some(prevCoin => prevCoin.tokenAddress === coin.tokenAddress)
+                );
+
                 // Save the updated dpPublished back to local storage and state
                 localStorage.setItem('dpPublished', JSON.stringify(updatedDpPublished));
                 setDpPublished(updatedDpPublished);
+                setPreviousDpPublished(updatedDpPublished);
+                setNewlyAddedBlueCoins(newlyAddedBlue);
 
                 console.log('dpPublished:', updatedDpPublished);
 
-                // Update newImageDisplayed and track newly displayed coins
-                addedCoinsArray.forEach(coin => {
-                    if (!newImageDisplayed.some(displayedCoin => displayedCoin.tokenAddress === coin.tokenAddress)) {
-                        newImageDisplayed.push(coin);
-                        flashGreen(coin.tokenAddress); // Flash green when a new coin is displayed
-                    }
-                });
-                
-                setNewImageDisplayed([...newImageDisplayed]);
+                // Track newly added green coins
+                const newlyAddedGreen = addedCoinsArray.filter(coin => 
+                    !previousAddedCoins.some(prevCoin => prevCoin.tokenAddress === coin.tokenAddress)
+                );
+
+                setAddedCoins(addedCoinsArray);
+                setPreviousAddedCoins(addedCoinsArray);
+                setNewlyAddedGreenCoins(newlyAddedGreen);
+
+                console.log('Newly Added Green Coins:', newlyAddedGreen);
+                console.log('Newly Added Blue Coins:', newlyAddedBlue);
 
             } catch (error) {
                 console.error('Error updating coins:', error);
@@ -109,10 +110,10 @@ function Body() {
 
         clearLocalStorageOnce(); // Clear local storage once on startup
         updateCoins(); // Initial load
-        const intervalId = setInterval(updateCoins, 1000); // Update every second
+        const intervalId = setInterval(updateCoins, 10000); // Update every 10 seconds
 
         return () => clearInterval(intervalId); // Cleanup interval on unmount
-    }, [addedCoins, newImageDisplayed]);
+    }, [previousAddedCoins, previousDpPublished]);
 
     // Split coins into rows of 4 for the added images
     const splitIntoRows = (coins) => {
@@ -134,10 +135,10 @@ function Body() {
                 <div className='upcoming-body'>
                     {dpPublished.map((coin, index) => (
                         <CoinBox
-                            key={index}
+                            key={`${coin.tokenAddress}-${coin.isNew}-${index}`} // Ensure re-render when isNew changes
                             coin={coin}
                             id={`coinBox-${coin.tokenAddress}`}
-                            isNewBlue={coin.isNew} // Pass the isNew flag to CoinBox
+                            isNewBlue={newlyAddedBlueCoins.some(newCoin => newCoin.tokenAddress === coin.tokenAddress)} // Pass the isNew flag to CoinBox
                         />
                     ))}
                 </div>
@@ -150,10 +151,10 @@ function Body() {
                     <div key={rowIndex} className='row'>
                         {row.map((coin, index) => (
                             <CoinBox
-                                key={index}
+                                key={`${coin.tokenAddress}-${index}`} // Ensure unique key
                                 coin={coin}
                                 id={`coinBox-${coin.tokenAddress}`}
-                                isNewGreen={true} // Ensure it gets the prop
+                                isNewGreen={newlyAddedGreenCoins.some(newCoin => newCoin.tokenAddress === coin.tokenAddress)} // Ensure it gets the prop
                             />
                         ))}
                     </div>
