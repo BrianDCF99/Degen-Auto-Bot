@@ -72,14 +72,13 @@ function CoinBox({ coin, id, isNewBlue, isNewGreen }) {
     const formattedLiquidity = formatNumber(coin.totalLiquidity);
 
     // Handle pinata.cloud links
-    const imgSrc = (imgUrl) => {
-        if (!imgUrl){
-            return imgNotFound;
+    const imgSrc = (imgURL) => {
+        if (imgURL.includes('gateway.pinata.cloud')) {
+            return imgURL.replace('gateway.pinata.cloud', 'cloudflare-ipfs.com');
+        } else if (imgURL.includes('cf-ipfs.com')) {
+            return imgURL.replace('cf-ipfs.com', 'cloudflare-ipfs.com');
         }
-        if (imgUrl.includes('pinata.cloud')) {
-            return imgUrl.replace('gateway.pinata.cloud', 'cloudflare-ipfs.com');
-        }
-        return imgUrl;
+        return imgURL;
     };
 
     const handleCopy = () => {
