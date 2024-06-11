@@ -77,13 +77,16 @@ function CoinBox({ coin, id, isNewBlue, isNewGreen }) {
             return imgURL.replace('gateway.pinata.cloud', 'cloudflare-ipfs.com');
         } else if (imgURL.includes('cf-ipfs.com')) {
             return imgURL.replace('cf-ipfs.com', 'cloudflare-ipfs.com');
+        }else if (imgURL === '') {
+            return imgNotFound;
         }
         return imgURL;
     };
 
     const handleCopy = () => {
+        const textToCopy = coin.tokenAddress;
         if (navigator.clipboard && navigator.clipboard.writeText) {
-            navigator.clipboard.writeText(coin.tokenAddress).then(() => {
+            navigator.clipboard.writeText(textToCopy).then(() => {
                 setIsCopied(true);
                 setTimeout(() => {
                     setIsCopied(false);
@@ -93,7 +96,7 @@ function CoinBox({ coin, id, isNewBlue, isNewGreen }) {
             });
         } else {
             const textarea = document.createElement('textarea');
-            textarea.value = coin.poolAddress;
+            textarea.value = textToCopy;
             document.body.appendChild(textarea);
             textarea.select();
             try {
@@ -108,6 +111,8 @@ function CoinBox({ coin, id, isNewBlue, isNewGreen }) {
             document.body.removeChild(textarea);
         }
     };
+    
+
 
     const handleButtonClick = (url) => {
         window.open(url, '_blank');
