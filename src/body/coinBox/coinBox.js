@@ -23,8 +23,10 @@ function formatNumber(num) {
     return '$' + num.toFixed(2);
 }
 
-function CoinBox({ coin, id, isNewBlue, isNewGreen }) {
+function CoinBox({ coin, id, isNewBlue, isNewGreen, isNewYellow }) {
     const copyButtonRef = useRef(null);
+    const [isCopied, setIsCopied] = useState(false);
+    const [hasFlashed, setHasFlashed] = useState(false);
 
     useEffect(() => {
         const clipboard = new ClipboardJS(copyButtonRef.current, {
@@ -47,17 +49,13 @@ function CoinBox({ coin, id, isNewBlue, isNewGreen }) {
         };
     }, [coin.tokenAddress]);
 
-
-    const [isCopied, setIsCopied] = useState(false);
-    const [hasFlashed, setHasFlashed] = useState(false);
-
     useEffect(() => {
-        // Reset hasFlashed state when isNewBlue or isNewGreen changes
+        // Reset hasFlashed state when isNewBlue, isNewGreen, or isNewYellow changes
         setHasFlashed(false);
-    }, [isNewBlue, isNewGreen]);
+    }, [isNewBlue, isNewGreen, isNewYellow]);
 
     useEffect(() => {
-        // Flash blue or green based on the prop
+        // Flash blue, green, or yellow based on the prop
         if (!hasFlashed) {
             if (isNewBlue) {
                 flashBlue(coin.tokenAddress);
@@ -65,9 +63,12 @@ function CoinBox({ coin, id, isNewBlue, isNewGreen }) {
             } else if (isNewGreen) {
                 flashGreen(coin.tokenAddress);
                 setHasFlashed(true);
+            } else if (isNewYellow) {
+                flashYellow(coin.tokenAddress);
+                setHasFlashed(true);
             }
         }
-    }, [isNewBlue, isNewGreen, coin.tokenAddress, hasFlashed]);
+    }, [isNewBlue, isNewGreen, isNewYellow, coin.tokenAddress, hasFlashed]);
 
     const flashBlue = (coinAddress) => {
         const element = document.getElementById(`coinBox-${coinAddress}`);
@@ -85,6 +86,16 @@ function CoinBox({ coin, id, isNewBlue, isNewGreen }) {
             element.classList.add('flashGreen');
             setTimeout(() => {
                 element.classList.remove('flashGreen');
+            }, 1000); // Duration of the animation
+        }
+    };
+
+    const flashYellow = (coinAddress) => {
+        const element = document.getElementById(`coinBox-${coinAddress}`);
+        if (element) {
+            element.classList.add('flashYellow');
+            setTimeout(() => {
+                element.classList.remove('flashYellow');
             }, 1000); // Duration of the animation
         }
     };

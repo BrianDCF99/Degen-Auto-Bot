@@ -10,6 +10,7 @@ function Body() {
     const [previousDpPublished, setPreviousDpPublished] = useState([]); // Track previous published coins
     const [newlyAddedGreenCoins, setNewlyAddedGreenCoins] = useState([]); // Track newly added coins for green flashing
     const [newlyAddedBlueCoins, setNewlyAddedBlueCoins] = useState([]); // Track newly added coins for blue flashing
+    const [newlyAddedYellowCoins, setNewlyAddedYellowCoins] = useState([]); // Track newly added coins for yellow flashing
 
     useEffect(() => {
         const clearLocalStorageOnce = () => {
@@ -63,6 +64,11 @@ function Body() {
                     dpPublishedArray = JSON.parse(localStorage.getItem('dpPublished'));
                 }
 
+                // Track coins removed from dpPublished
+                const removedFromDpPublished = dpPublishedArray.filter(coin =>
+                    !bufferArray.some(bufferCoin => bufferCoin.tokenAddress === coin.tokenAddress)
+                );
+
                 // Remove coins from dpPublished that are not in bufferArray
                 const updatedDpPublished = dpPublishedArray.filter(coin =>
                     bufferArray.some(bufferCoin => bufferCoin.tokenAddress === coin.tokenAddress)
@@ -83,17 +89,24 @@ function Body() {
                     !previousDpPublished.some(prevCoin => prevCoin.tokenAddress === coin.tokenAddress)
                 );
 
+                // Track coins that moved to addedCoinsArray
+                const movedToAddedCoins = addedCoinsArray.filter(coin =>
+                    removedFromDpPublished.some(removedCoin => removedCoin.tokenAddress === coin.tokenAddress)
+                );
+
                 // Save the updated dpPublished back to local storage and state
                 localStorage.setItem('dpPublished', JSON.stringify(updatedDpPublished));
                 setDpPublished(updatedDpPublished);
                 setPreviousDpPublished(updatedDpPublished);
                 setNewlyAddedBlueCoins(newlyAddedBlue);
+                setNewlyAddedYellowCoins(movedToAddedCoins);
 
                 console.log('dpPublished:', updatedDpPublished);
 
                 // Track newly added green coins
                 const newlyAddedGreen = addedCoinsArray.filter(coin => 
-                    !previousAddedCoins.some(prevCoin => prevCoin.tokenAddress === coin.tokenAddress)
+                    !previousAddedCoins.some(prevCoin => prevCoin.tokenAddress === coin.tokenAddress) &&
+                    !movedToAddedCoins.some(movedCoin => movedCoin.tokenAddress === coin.tokenAddress)
                 );
 
                 setAddedCoins(addedCoinsArray);
@@ -102,6 +115,7 @@ function Body() {
 
                 console.log('Newly Added Green Coins:', newlyAddedGreen);
                 console.log('Newly Added Blue Coins:', newlyAddedBlue);
+                console.log('Newly Added Yellow Coins:', movedToAddedCoins);
 
             } catch (error) {
                 console.error('Error updating coins:', error);
@@ -155,6 +169,7 @@ function Body() {
                                 coin={coin}
                                 id={`coinBox-${coin.tokenAddress}`}
                                 isNewGreen={newlyAddedGreenCoins.some(newCoin => newCoin.tokenAddress === coin.tokenAddress)} // Ensure it gets the prop
+                                isNewYellow={newlyAddedYellowCoins.some(newCoin => newCoin.tokenAddress === coin.tokenAddress)} // Pass the isNewYellow flag to CoinBox
                             />
                         ))}
                     </div>

@@ -132,3 +132,12 @@
 .flashGreen {
     animation: flashGreen 1s ease-in-out 3;
 }
+
+@keyframes flashYellow {
+    0%, 100% { background-color: #010b18; }
+    25%, 75% { background-color: yellow; }
+}
+
+.flashYellow {
+    animation: flashYellow 1s ease-in-out 3;
+}
