@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import ClipboardJS from 'clipboard';
 import { copyImage, twitterImage, telegramImage, websiteImage, pumpFunImage, imgNotFound } from './links';
 import './coinBox.css';
