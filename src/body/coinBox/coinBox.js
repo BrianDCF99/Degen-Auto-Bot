@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
+import ClipboardJS from 'clipboard';
 import { copyImage, twitterImage, telegramImage, websiteImage, pumpFunImage, imgNotFound } from './links';
 import './coinBox.css';
 
@@ -23,6 +24,30 @@ function formatNumber(num) {
 }
 
 function CoinBox({ coin, id, isNewBlue, isNewGreen }) {
+    const copyButtonRef = useRef(null);
+
+    useEffect(() => {
+        const clipboard = new ClipboardJS(copyButtonRef.current, {
+            text: () => coin.tokenAddress
+        });
+
+        clipboard.on('success', () => {
+            setIsCopied(true);
+            setTimeout(() => {
+                setIsCopied(false);
+            }, 1500);
+        });
+
+        clipboard.on('error', () => {
+            console.error('Failed to copy text');
+        });
+
+        return () => {
+            clipboard.destroy();
+        };
+    }, [coin.tokenAddress]);
+
+
     const [isCopied, setIsCopied] = useState(false);
     const [hasFlashed, setHasFlashed] = useState(false);
 
@@ -77,42 +102,11 @@ function CoinBox({ coin, id, isNewBlue, isNewGreen }) {
             return imgURL.replace('gateway.pinata.cloud', 'cloudflare-ipfs.com');
         } else if (imgURL.includes('cf-ipfs.com')) {
             return imgURL.replace('cf-ipfs.com', 'cloudflare-ipfs.com');
-        }else if (imgURL === '') {
+        } else if (imgURL === '') {
             return imgNotFound;
         }
         return imgURL;
     };
-
-    const handleCopy = () => {
-        const textToCopy = coin.tokenAddress;
-        if (navigator.clipboard && navigator.clipboard.writeText) {
-            navigator.clipboard.writeText(textToCopy).then(() => {
-                setIsCopied(true);
-                setTimeout(() => {
-                    setIsCopied(false);
-                }, 1500);
-            }).catch(err => {
-                console.error('Could not copy text: ', err);
-            });
-        } else {
-            const textarea = document.createElement('textarea');
-            textarea.value = textToCopy;
-            document.body.appendChild(textarea);
-            textarea.select();
-            try {
-                document.execCommand('copy');
-                setIsCopied(true);
-                setTimeout(() => {
-                    setIsCopied(false);
-                }, 200);
-            } catch (err) {
-                console.error('Could not copy text: ', err);
-            }
-            document.body.removeChild(textarea);
-        }
-    };
-    
-
 
     const handleButtonClick = (url) => {
         window.open(url, '_blank');
@@ -158,7 +152,7 @@ function CoinBox({ coin, id, isNewBlue, isNewGreen }) {
                 <p>MC: {formattedMarketCap}</p>
                 <p>Liq: {formattedLiquidity}</p>
                 <div className='buttonContainer'>
-                    <button className={`clipboardButton ${isCopied ? 'copied' : ''}`} onClick={handleCopy}>
+                    <button className={`clipboardButton ${isCopied ? 'copied' : ''}`} ref={copyButtonRef}>
                         <img className='clipboardIcon' src={copyImage} alt='Clipboard' />
                     </button>
                     {socialButtons}
